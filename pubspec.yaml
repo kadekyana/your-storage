@@ -38,6 +38,11 @@ dependencies:
   get_cli: ^1.8.4
   lottie: ^2.7.0
   salomon_bottom_bar: ^3.3.2
+  qr_flutter: ^4.1.0
+  qr_code_scanner: ^1.0.1
+  permission_handler: ^11.0.1
+  flutter_slidable: ^3.0.0
+  image_picker: ^1.0.4
 
 dev_dependencies:
   flutter_test:

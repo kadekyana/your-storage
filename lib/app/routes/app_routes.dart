@@ -10,6 +10,11 @@ abstract class Routes {
   static const HOME = _Paths.HOME;
   static const BOTTOM_BAR = _Paths.BOTTOM_BAR;
   static const PROFILE = _Paths.PROFILE;
+  static const Q_R_CODE = _Paths.Q_R_CODE;
+  static const DETAIL_BARANG = _Paths.DETAIL_BARANG;
+  static const TAMBAH_BARANG = _Paths.TAMBAH_BARANG;
+  static const EDIT_BARANG = _Paths.EDIT_BARANG;
+  static const SCANNER = _Paths.SCANNER;
 }
 
 abstract class _Paths {
@@ -21,4 +26,9 @@ abstract class _Paths {
   static const HOME = '/home';
   static const BOTTOM_BAR = '/bottom-bar';
   static const PROFILE = '/profile';
+  static const Q_R_CODE = '/q-r-code';
+  static const DETAIL_BARANG = '/detail-barang';
+  static const TAMBAH_BARANG = '/tambah-barang';
+  static const EDIT_BARANG = '/edit-barang';
+  static const SCANNER = '/scanner';
 }

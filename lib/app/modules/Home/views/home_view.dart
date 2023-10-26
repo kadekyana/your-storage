@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:get/get.dart';
+import 'package:your_storage/app/modules/EditBarang/views/edit_barang_view.dart';
+import 'package:your_storage/app/modules/QRCode/views/q_r_code_view.dart';
+import 'package:your_storage/app/modules/Scanner/views/scanner_view.dart';
+import 'package:your_storage/app/modules/TambahBarang/views/tambah_barang_view.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -14,7 +19,9 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.indigo[900],
-        onPressed: () {},
+        onPressed: () {
+          Get.to(TambahBarangView());
+        },
         child: Icon(Icons.add),
       ),
       body: SafeArea(
@@ -66,18 +73,63 @@ class HomeView extends GetView<HomeController> {
               ),
             ),
             Positioned(
-              top: 150,
+              top: 90,
+              left: 290,
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(ScannerView());
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      child: Icon(Icons.qr_code_rounded),
+                    ),
+                    Text(
+                      'Scanner',
+                      style: TextStyle(
+                          fontFamily: 'Poppins', fontWeight: FontWeight.w700),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 160,
               child: Container(
                 width: MQW,
-                height: MQH * 0.65,
+                height: MQH * 0.7,
                 child: ListView.builder(
                   itemCount: 100,
                   itemBuilder: (context, index) {
-                    return Card(
-                      child: ListTile(
-                        title: Text('Testing'),
-                        leading: Image.asset('images/wi.png'),
-                        subtitle: Text('lorem ipsum si jamet keren'),
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(QRCodeView());
+                      },
+                      child: Slidable(
+                        endActionPane:
+                            ActionPane(motion: const DrawerMotion(), children: [
+                          SlidableAction(
+                              backgroundColor: Colors.blue,
+                              icon: Icons.edit,
+                              label: 'Edit Barang',
+                              onPressed: (context) {
+                                Get.to(EditBarangView());
+                              }),
+                          SlidableAction(
+                              backgroundColor: Colors.red,
+                              icon: Icons.delete,
+                              label: 'Hapus Barang',
+                              onPressed: (context) {})
+                        ]),
+                        child: Card(
+                          child: ListTile(
+                            title: Text('Testing'),
+                            leading: Image.asset('images/wi.png'),
+                            subtitle: const Text('lorem ipsum si jamet keren',
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                        ),
                       ),
                     );
                   },

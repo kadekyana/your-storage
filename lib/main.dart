@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:your_storage/app/modules/splashScreen/views/splash_screen_view.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final CameraPermission = await Permission.camera.request();
+  if (CameraPermission.isGranted) {
+    runApp(
+      const MyApp(),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {

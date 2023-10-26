@@ -18,7 +18,7 @@ class BottomBarView extends GetView<BottomBarController> {
         () => SalomonBottomBar(
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white,
-          backgroundColor: Color(0xff190482),
+          backgroundColor: Color(0xffC0392B),
           currentIndex: selectedIndex.value,
           onTap: (index) => selectedIndex.value =
               index, // Menggunakan GetX untuk mengatur selectedIndex.

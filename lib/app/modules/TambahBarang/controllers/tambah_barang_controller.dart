@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
-class ProfileController extends GetxController {
-  //TODO: Implement ProfileController
+class TambahBarangController extends GetxController {
+  //TODO: Implement TambahBarangController
 
   final count = 0.obs;
   @override
