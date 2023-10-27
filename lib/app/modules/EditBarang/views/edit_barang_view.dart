@@ -1,13 +1,22 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
+import 'package:your_storage/app/modules/TambahBarang/controllers/tambah_barang_controller.dart';
+import 'package:your_storage/app/widget/custom_date.dart';
 
-import '../controllers/edit_barang_controller.dart';
-
-class EditBarangView extends GetView<EditBarangController> {
+class EditBarangView extends StatefulWidget {
   EditBarangView({Key? key}) : super(key: key);
+
+  @override
+  State<EditBarangView> createState() => _EditBarangViewState();
+}
+
+class _EditBarangViewState extends State<EditBarangView> {
   final _formkey = GlobalKey<FormState>();
+  final TambahBarangController controller = Get.put(TambahBarangController());
+  File? pickImage;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +41,7 @@ class EditBarangView extends GetView<EditBarangController> {
               ),
             ),
             Positioned(
-                top: 50,
+                top: 40,
                 left: 10,
                 child: Text(
                   'EDIT',
@@ -43,7 +52,7 @@ class EditBarangView extends GetView<EditBarangController> {
                       fontWeight: FontWeight.w700),
                 )),
             Positioned(
-              top: 80,
+              top: 70,
               left: 10,
               child: Text(
                 'BARANG',
@@ -55,10 +64,10 @@ class EditBarangView extends GetView<EditBarangController> {
               ),
             ),
             Positioned(
-              bottom: 100,
+              bottom: 0,
               child: Container(
                 width: MQW,
-                height: MQH * 0.6,
+                height: MQH * 0.8,
                 child: Card(
                   elevation: 10,
                   child: Form(
@@ -77,6 +86,7 @@ class EditBarangView extends GetView<EditBarangController> {
                               }
                               return null;
                             },
+
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 5, horizontal: 20),
@@ -84,25 +94,17 @@ class EditBarangView extends GetView<EditBarangController> {
                                 border: OutlineInputBorder(),
                                 suffixIcon: Icon(Icons.edit)),
                           ),
-                          SizedBox(
-                            height: MQH * 0.01,
-                          ),
-                          TextFormField(
-                            keyboardType: TextInputType.datetime,
-                            // controller: _loginController.username,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Tanggal Tidak Boleh Kosong";
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 20),
-                                label: Text('Masukkan Tanggal'),
-                                border: OutlineInputBorder(),
-                                suffixIcon: Icon(Icons.date_range)),
-                          ),
+                          controller.dropdownForm(
+                              items: ["Elektronik", "Non Elektronik"],
+                              changeValue: (value) {
+                                setState(() {
+                                  controller..selectedValueDrop = value;
+                                });
+                              },
+                              value: controller.selectedValueDrop),
+                          _dateForm(
+                              hintText: 'Tanggal Input',
+                              controller: controller.tanggal),
                           SizedBox(
                             height: MQH * 0.01,
                           ),
@@ -161,6 +163,41 @@ class EditBarangView extends GetView<EditBarangController> {
                           SizedBox(
                             height: MQH * 0.01,
                           ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GetBuilder<TambahBarangController>(
+                                    builder: (controller) {
+                                  if (controller.picselect != null) {
+                                    return Row(
+                                      children: [
+                                        Container(
+                                          height: 50,
+                                          width: 50,
+                                          child: CircleAvatar(
+                                              radius: 50,
+                                              backgroundImage: FileImage(File(
+                                                  controller.picselect!.path))),
+                                        ),
+                                        IconButton(
+                                            onPressed: () =>
+                                                controller.deleteImage(),
+                                            icon: Icon(Icons.delete)),
+                                      ],
+                                    );
+                                  } else {
+                                    return Text('No Image');
+                                  }
+                                }),
+                                TextButton(
+                                    // ignore: void_checks
+                                    onPressed: () => controller.selectImage(),
+                                    child: Text('Choose')),
+                              ],
+                            ),
+                          ),
                           Spacer(),
                           Center(
                             child: FilledButton(
@@ -182,7 +219,7 @@ class EditBarangView extends GetView<EditBarangController> {
                                 ),
                               ),
                               child: Text(
-                                'Edit',
+                                'Tambah',
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w700),
@@ -202,6 +239,33 @@ class EditBarangView extends GetView<EditBarangController> {
           ],
         ),
       ),
+    );
+  }
+
+  Column _dateForm(
+      {required String hintText, required TextEditingController controller}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 8),
+        SuffixIconTextField(
+          onTap: () async {
+            final DateTime? picked = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime(2025));
+
+            if (picked != null) {
+              String formattedDate = DateFormat('dd-MM-yyy').format(picked);
+              controller.text = formattedDate;
+            }
+          },
+          hintText: hintText,
+          controller: controller,
+          icon: Icon(Icons.calendar_today),
+        ),
+      ],
     );
   }
 }
