@@ -1,12 +1,41 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_storage/app/modules/AfterSplash/views/after_splash_view.dart';
+import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
 
 class SplashScreenController extends GetxController {
   //TODO: Implement SplashScreenController
 
-  List data = [];
+  String data = '';
+
+  Future<void> cekLogin() async {
+    var duration = Duration(seconds: 3);
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    bool Login = preferences.getBool('Login') ?? false;
+    // bool Onboarding = preferences.getBool('Getstart') ?? false;
+
+    if (Login) {
+      String? Token = preferences.getString('Token');
+      data = Token!;
+    }
+    return Future.delayed(duration, () {
+      if (Login = true) {
+        Get.to(BottomBarView());
+      } else {
+        Get.to(AfterSplashView());
+      }
+      // if (Onboarding == false) {
+      //   Get.to(OnboardingView());
+      // } else {
+      //   Get.to(
+      //     duration: Duration(seconds: 3),
+      //     Login ? BottomNavBarView() : AfterSplashView(),
+      //   );
+      // }
+    });
+  }
 
   var duration = const Duration(seconds: 3);
 

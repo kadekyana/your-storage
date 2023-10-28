@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
-import 'package:your_storage/app/modules/Home/views/home_view.dart';
 import 'package:your_storage/app/modules/Registrasi/views/registrasi_view.dart';
 
 import '../controllers/login_controller.dart';
 
-class LoginView extends GetView<LoginController> {
+class LoginView extends StatefulWidget {
   LoginView({Key? key}) : super(key: key);
-  final LoginController _loginController = Get.put(LoginController());
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final LoginController controller = Get.put(LoginController());
+
   final _formkey = GlobalKey<FormState>();
+
   final RxBool sembunyikan = false.obs;
 
   void buttonSembunyikan() {
@@ -70,7 +77,7 @@ class LoginView extends GetView<LoginController> {
                         children: [
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,
-                            // controller: _loginController.username,
+                            controller: controller.email,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Email Tidak Boleh Kosong";
@@ -89,7 +96,7 @@ class LoginView extends GetView<LoginController> {
                           ),
                           Obx(
                             () => TextFormField(
-                              // controller: _loginController.password,
+                              controller: controller.password,
                               obscureText: !sembunyikan.value,
                               validator: (value) {
                                 if (value!.isEmpty) {
@@ -146,9 +153,8 @@ class LoginView extends GetView<LoginController> {
                           if (_formkey.currentState!.validate()) {
                             _formkey.currentState!.save();
                             Get.to(BottomBarView());
-                            // return _loginController.login(
-                            //     _loginController.username.text,
-                            //     _loginController.password.text);
+                            controller.login(controller.email.text,
+                                controller.password.text);
                           }
                         },
                         style: ButtonStyle(

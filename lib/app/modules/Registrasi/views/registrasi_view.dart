@@ -5,10 +5,16 @@ import 'package:your_storage/app/modules/Login/views/login_view.dart';
 
 import '../controllers/registrasi_controller.dart';
 
-class RegistrasiView extends GetView<RegistrasiController> {
+class RegistrasiView extends StatefulWidget {
   RegistrasiView({Key? key}) : super(key: key);
 
+  @override
+  State<RegistrasiView> createState() => _RegistrasiViewState();
+}
+
+class _RegistrasiViewState extends State<RegistrasiView> {
   final _formkey = GlobalKey<FormState>();
+  final RegistrasiController controller = Get.put(RegistrasiController());
   final RxBool sembunyikan = false.obs;
 
   void buttonSembunyikan() {
@@ -67,7 +73,7 @@ class RegistrasiView extends GetView<RegistrasiController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextFormField(
-                            // controller: controller.name,
+                            controller: controller.name,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Nama Tidak Boleh Kosong";
@@ -86,7 +92,7 @@ class RegistrasiView extends GetView<RegistrasiController> {
                           ),
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,
-                            // controller: controller.email,
+                            controller: controller.email,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Email Tidak Boleh Kosong";
@@ -105,7 +111,7 @@ class RegistrasiView extends GetView<RegistrasiController> {
                           ),
                           Obx(
                             () => TextFormField(
-                              // controller: controller.password,
+                              controller: controller.password,
                               obscureText: !sembunyikan.value,
                               validator: (value) {
                                 if (value!.isEmpty) {
@@ -160,11 +166,10 @@ class RegistrasiView extends GetView<RegistrasiController> {
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             _formkey.currentState!.save();
-                            //   return controller.register(
-                            //       controller.email.text,
-                            //       controller.password.text,
-                            //       controller.name.text,
-                            //       controller.nim.text);
+                            controller.registrasi(
+                                controller.name.text,
+                                controller.email.text,
+                                controller.password.text);
                           }
                         },
                         style: ButtonStyle(

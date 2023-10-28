@@ -2,15 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_storage/app/modules/EditBarang/views/edit_barang_view.dart';
+import 'package:your_storage/app/modules/Login/controllers/login_controller.dart';
 import 'package:your_storage/app/modules/QRCode/views/q_r_code_view.dart';
 import 'package:your_storage/app/modules/Scanner/views/scanner_view.dart';
 import 'package:your_storage/app/modules/TambahBarang/views/tambah_barang_view.dart';
+import 'package:your_storage/app/modules/splashScreen/controllers/splash_screen_controller.dart';
 
 import '../controllers/home_controller.dart';
 
-class HomeView extends GetView<HomeController> {
+class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final LoginController login = Get.put(LoginController());
+  final HomeController home = Get.put(HomeController());
+  final SplashScreenController splash = Get.put(SplashScreenController());
+
+  // String data = '';
+  // @override
+  // void initState() async {
+  //   super.initState();
+  //   // setState(() {});
+  //   // splash.cekLogin();
+  //   // print(splash.data);
+  //   // print(login.data);
+  // }
+
   @override
   Widget build(BuildContext context) {
     final MQW = MediaQuery.of(context).size.width;
