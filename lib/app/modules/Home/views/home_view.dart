@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -23,16 +24,35 @@ class _HomeViewState extends State<HomeView> {
   final LoginController login = Get.put(LoginController());
   final HomeController home = Get.put(HomeController());
   final SplashScreenController splash = Get.put(SplashScreenController());
+  final String baseUrl =
+      'https://wiwindendriani.000webhostapp.com/api/userbarang';
+  Dio dio = Dio();
+  List<dynamic> dataBarang = [];
 
-  // String data = '';
-  // @override
-  // void initState() async {
-  //   super.initState();
-  //   // setState(() {});
-  //   // splash.cekLogin();
-  //   // print(splash.data);
-  //   // print(login.data);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    setState(() {});
+    print(login.data);
+    print(splash.data);
+    Future.delayed(Duration(seconds: 5), () {
+      UserBarang();
+      splash.cekLogin();
+    });
+  }
+
+  Future<void> UserBarang() async {
+    final userid = login.data.isNotEmpty
+        ? login.data[0]['user_id']
+        : splash.data[0]['user_id'];
+    final response = await dio.get('$baseUrl/$userid');
+    if (response.statusCode == 200) {
+      setState(() {
+        dataBarang = response.data['data'];
+        print(dataBarang);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +75,7 @@ class _HomeViewState extends State<HomeView> {
               width: MQW,
               height: MQH,
             ),
-            Positioned(
+            const Positioned(
                 top: 30,
                 left: 10,
                 child: Text(
@@ -65,7 +85,7 @@ class _HomeViewState extends State<HomeView> {
                       fontSize: 20,
                       fontWeight: FontWeight.w700),
                 )),
-            Positioned(
+            const Positioned(
               top: 50,
               left: 10,
               child: Text(
@@ -123,8 +143,9 @@ class _HomeViewState extends State<HomeView> {
                 width: MQW,
                 height: MQH * 0.7,
                 child: ListView.builder(
-                  itemCount: 100,
+                  itemCount: dataBarang.length,
                   itemBuilder: (context, index) {
+                    final barang = dataBarang[index];
                     return GestureDetector(
                       onTap: () {
                         Get.to(QRCodeView());
@@ -147,9 +168,9 @@ class _HomeViewState extends State<HomeView> {
                         ]),
                         child: Card(
                           child: ListTile(
-                            title: Text('Testing'),
+                            title: Text(barang['nama']),
                             leading: Image.asset('images/wi.png'),
-                            subtitle: const Text('lorem ipsum si jamet keren',
+                            subtitle: Text(barang['tanggal'],
                                 overflow: TextOverflow.ellipsis),
                           ),
                         ),

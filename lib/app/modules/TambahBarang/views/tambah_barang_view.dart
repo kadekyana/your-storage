@@ -20,6 +20,11 @@ class _TambahBarangViewState extends State<TambahBarangView> {
   final TambahBarangController controller = Get.put(TambahBarangController());
   File? pickImage;
 
+  Map<String, int> valueMapping = {
+    "Elektronik": 1,
+    "Non Elektronik": 2,
+  };
+
   @override
   Widget build(BuildContext context) {
     final MQW = MediaQuery.of(context).size.width;
@@ -81,14 +86,13 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextFormField(
-                            // controller: _loginController.username,
+                            controller: controller.nama,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Nama Tidak Boleh Kosong";
                               }
                               return null;
                             },
-
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 5, horizontal: 20),
@@ -97,7 +101,10 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                                 suffixIcon: Icon(Icons.edit)),
                           ),
                           controller.dropdownForm(
-                              items: ["Elektronik", "Non Elektronik"],
+                              items: ["", "Elektronik", "Non Elektronik"]
+                                  .map((String item) {
+                                return item;
+                              }).toList(),
                               changeValue: (value) {
                                 setState(() {
                                   controller..selectedValueDrop = value;
@@ -111,6 +118,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                             height: MQH * 0.01,
                           ),
                           TextFormField(
+                            controller: controller.jumlah,
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -129,7 +137,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                             height: MQH * 0.01,
                           ),
                           TextFormField(
-                            // controller: _loginController.username,
+                            controller: controller.warna,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Warna Tidak Boleh Kosong";
@@ -148,7 +156,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                           ),
                           TextFormField(
                             keyboardType: TextInputType.number,
-                            // controller: _loginController.username,
+                            controller: controller.harga,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Harga Tidak Boleh Kosong";
@@ -194,7 +202,6 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                                   }
                                 }),
                                 TextButton(
-                                    // ignore: void_checks
                                     onPressed: () => controller.selectImage(),
                                     child: Text('Choose')),
                               ],
@@ -207,9 +214,12 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                                 if (_formkey.currentState!.validate()) {
                                   _formkey.currentState!.save();
                                   Get.to(BottomBarView());
-                                  // return _loginController.login(
-                                  //     _loginController.username.text,
-                                  //     _loginController.password.text);
+                                  controller.tambah(
+                                      controller.nama.text,
+                                      controller.warna.text,
+                                      controller.jumlah.text,
+                                      controller.harga.text,
+                                      controller.tanggal.text);
                                 }
                               },
                               style: const ButtonStyle(

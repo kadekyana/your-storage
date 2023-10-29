@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:your_storage/app/modules/Login/controllers/login_controller.dart';
 
 import '../controllers/profile_controller.dart';
 
-class ProfileView extends GetView<ProfileController> {
+class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
 
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  final LoginController login = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     final MQW = MediaQuery.of(context).size.width;
@@ -58,7 +65,9 @@ class ProfileView extends GetView<ProfileController> {
                   EdgeInsets.symmetric(vertical: 10, horizontal: 80),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                login.logout();
+              },
               child: Text(
                 'LOGOUT',
                 style: TextStyle(

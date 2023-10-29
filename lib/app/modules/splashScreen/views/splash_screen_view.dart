@@ -17,7 +17,9 @@ class _SplashScreenViewState extends State<SplashScreenView> {
   @override
   void initState() {
     super.initState();
-    controller.splashStart();
+    // controller.splashStart();
+
+    controller.cekLogin();
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         _opacity = 1.0;
