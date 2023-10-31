@@ -1,25 +1,59 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
-import 'package:your_storage/app/modules/TambahBarang/controllers/tambah_barang_controller.dart';
+import 'package:your_storage/app/modules/EditBarang/controllers/edit_barang_controller.dart';
 import 'package:your_storage/app/widget/custom_date.dart';
 
 class EditBarangView extends StatefulWidget {
-  EditBarangView({Key? key}) : super(key: key);
+  final dynamic detail;
+  EditBarangView({Key? key, required this.detail}) : super(key: key);
 
   @override
   State<EditBarangView> createState() => _EditBarangViewState();
 }
 
 class _EditBarangViewState extends State<EditBarangView> {
+  final ImagePicker picker = ImagePicker();
+  File? image;
   final _formkey = GlobalKey<FormState>();
-  final TambahBarangController controller = Get.put(TambahBarangController());
+  final EditBarangController controller = Get.put(EditBarangController());
   File? pickImage;
+
+  final TextEditingController namaC = TextEditingController();
+  final TextEditingController tanggalC = TextEditingController();
+  final TextEditingController jumlahC = TextEditingController();
+  final TextEditingController warnaC = TextEditingController();
+  final TextEditingController hargaC = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Isi TextEditingControllers dengan data yang akan diubah
+    namaC.text = widget.detail['data']['nama'];
+    warnaC.text = widget.detail['data']['warna'];
+    jumlahC.text = widget.detail['data']['jumlah'];
+    hargaC.text = widget.detail['data']['harga'];
+    tanggalC.text = widget.detail['data']['tanggal'];
+  }
+
+  @override
+  void dispose() {
+    // Pastikan untuk membebaskan sumber daya saat widget dihapus
+    namaC.dispose();
+    warnaC.dispose();
+    jumlahC.dispose();
+    hargaC.dispose();
+    tanggalC.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    int id = widget.detail['data']['id'] ?? '';
+    print("id barang = $id");
     final MQW = MediaQuery.of(context).size.width;
     final MQH = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -79,14 +113,13 @@ class _EditBarangViewState extends State<EditBarangView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextFormField(
-                            // controller: _loginController.username,
+                            controller: namaC,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Nama Tidak Boleh Kosong";
                               }
                               return null;
                             },
-
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 5, horizontal: 20),
@@ -103,12 +136,12 @@ class _EditBarangViewState extends State<EditBarangView> {
                               },
                               value: controller.selectedValueDrop),
                           _dateForm(
-                              hintText: 'Tanggal Input',
-                              controller: controller.tanggal),
+                              hintText: 'Tanggal Input', controller: tanggalC),
                           SizedBox(
                             height: MQH * 0.01,
                           ),
                           TextFormField(
+                            controller: jumlahC,
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -127,7 +160,7 @@ class _EditBarangViewState extends State<EditBarangView> {
                             height: MQH * 0.01,
                           ),
                           TextFormField(
-                            // controller: _loginController.username,
+                            controller: warnaC,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Warna Tidak Boleh Kosong";
@@ -146,7 +179,7 @@ class _EditBarangViewState extends State<EditBarangView> {
                           ),
                           TextFormField(
                             keyboardType: TextInputType.number,
-                            // controller: _loginController.username,
+                            controller: hargaC,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Harga Tidak Boleh Kosong";
@@ -163,41 +196,40 @@ class _EditBarangViewState extends State<EditBarangView> {
                           SizedBox(
                             height: MQH * 0.01,
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 40),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GetBuilder<TambahBarangController>(
-                                    builder: (controller) {
-                                  if (controller.picselect != null) {
-                                    return Row(
-                                      children: [
-                                        Container(
-                                          height: 50,
-                                          width: 50,
-                                          child: CircleAvatar(
-                                              radius: 50,
-                                              backgroundImage: FileImage(File(
-                                                  controller.picselect!.path))),
-                                        ),
-                                        IconButton(
-                                            onPressed: () =>
-                                                controller.deleteImage(),
-                                            icon: Icon(Icons.delete)),
-                                      ],
-                                    );
-                                  } else {
-                                    return Text('No Image');
-                                  }
-                                }),
-                                TextButton(
-                                    // ignore: void_checks
-                                    onPressed: () => controller.selectImage(),
-                                    child: Text('Choose')),
-                              ],
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: EdgeInsets.symmetric(horizontal: 40),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       GetBuilder<TambahBarangController>(
+                          //           builder: (controller) {
+                          //         if (image != null) {
+                          //           return Row(
+                          //             children: [
+                          //               Container(
+                          //                 height: 50,
+                          //                 width: 50,
+                          //                 child: CircleAvatar(
+                          //                     radius: 50,
+                          //                     backgroundImage:
+                          //                         FileImage(File(image!.path))),
+                          //               ),
+                          //               IconButton(
+                          //                   onPressed: () => (),
+                          //                   icon: Icon(Icons.upload_file)),
+                          //             ],
+                          //           );
+                          //         } else {
+                          //           return Text('No Image');
+                          //         }
+                          //       }),
+                          //       TextButton(
+                          //           // ignore: void_checks
+                          //           onPressed: () => selectImage(),
+                          //           child: Text('Choose')),
+                          //     ],
+                          //   ),
+                          // ),
                           Spacer(),
                           Center(
                             child: FilledButton(
@@ -205,9 +237,13 @@ class _EditBarangViewState extends State<EditBarangView> {
                                 if (_formkey.currentState!.validate()) {
                                   _formkey.currentState!.save();
                                   Get.to(BottomBarView());
-                                  // return _loginController.login(
-                                  //     _loginController.username.text,
-                                  //     _loginController.password.text);
+                                  return controller.updateBarang(
+                                      namaC.text,
+                                      warnaC.text,
+                                      jumlahC.text,
+                                      hargaC.text,
+                                      tanggalC.text,
+                                      id);
                                 }
                               },
                               style: const ButtonStyle(
@@ -219,7 +255,7 @@ class _EditBarangViewState extends State<EditBarangView> {
                                 ),
                               ),
                               child: Text(
-                                'Tambah',
+                                'Edit',
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w700),
@@ -240,6 +276,16 @@ class _EditBarangViewState extends State<EditBarangView> {
         ),
       ),
     );
+  }
+
+  selectImage() async {
+    XFile? pick = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pick != null) {
+      setState(() {
+        image = File(pick.path);
+      });
+    }
   }
 
   Column _dateForm(

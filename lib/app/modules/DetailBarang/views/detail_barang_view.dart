@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
@@ -6,9 +9,27 @@ import '../controllers/detail_barang_controller.dart';
 class DetailBarangView extends GetView<DetailBarangController> {
   String qrResult;
   DetailBarangView({Key? key, required this.qrResult}) : super(key: key);
-
+  DetailBarangView detailBarang =
+      DetailBarangView(qrResult: "nilai QR di sini");
+  // final String baseurl = 'https://wiwindendriani.000webhostapp.com/api/detail';
+  // dynamic barang;
+  // Dio dio = Dio();
+  // Future<void> detail(int qrResult) async {
+  //   try {
+  //     final response = await dio.get("$baseurl/$qrResult");
+  //     if (response.statusCode == 200) {
+  //       print(response.data);
+  //       barang = response.data;
+  //       print("data barang : $barang");
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
+    print(qrResult);
+    print(detailBarang);
     final MQW = MediaQuery.of(context).size.width;
     final MQH = MediaQuery.of(context).size.height;
 
@@ -35,7 +56,6 @@ class DetailBarangView extends GetView<DetailBarangController> {
             Positioned(
               child: IconButton(
                 onPressed: () {
-                  qrResult = '';
                   Get.to(BottomBarView());
                 },
                 icon: Icon(Icons.arrow_back),
@@ -51,7 +71,7 @@ class DetailBarangView extends GetView<DetailBarangController> {
                   elevation: 10,
                   child: Center(
                     child: Text(
-                      '$qrResult',
+                      "${qrResult[1]}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: 'Poppins',

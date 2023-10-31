@@ -4,6 +4,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
 import 'package:your_storage/app/modules/EditBarang/views/edit_barang_view.dart';
 import 'package:your_storage/app/modules/Login/controllers/login_controller.dart';
 import 'package:your_storage/app/modules/QRCode/views/q_r_code_view.dart';
@@ -24,22 +26,26 @@ class _HomeViewState extends State<HomeView> {
   final LoginController login = Get.put(LoginController());
   final HomeController home = Get.put(HomeController());
   final SplashScreenController splash = Get.put(SplashScreenController());
-  final String baseUrl =
-      'https://wiwindendriani.000webhostapp.com/api/userbarang';
-  Dio dio = Dio();
-  List<dynamic> dataBarang = [];
 
   @override
   void initState() {
     super.initState();
-    setState(() {});
-    print(login.data);
-    print(splash.data);
+    // UserBarang();
     Future.delayed(Duration(seconds: 5), () {
-      UserBarang();
+      setState(() {});
       splash.cekLogin();
+      print("login data ${login.data}");
+      print("splah data ${splash.data}");
+      UserBarang();
     });
   }
+
+  Dio dio = Dio();
+
+  final String baseUrl =
+      'https://wiwindendriani.000webhostapp.com/api/userbarang';
+
+  List<dynamic> dataBarang = [];
 
   Future<void> UserBarang() async {
     final userid = login.data.isNotEmpty
@@ -47,10 +53,48 @@ class _HomeViewState extends State<HomeView> {
         : splash.data[0]['user_id'];
     final response = await dio.get('$baseUrl/$userid');
     if (response.statusCode == 200) {
-      setState(() {
-        dataBarang = response.data['data'];
-        print(dataBarang);
-      });
+      setState(() {});
+      dataBarang = response.data['data'];
+      print(dataBarang);
+    }
+  }
+
+  final baseeurl = 'https://wiwindendriani.000webhostapp.com/api/hapus';
+
+  Future<void> hapus(int id) async {
+    final response = await dio.post("$baseeurl/$id");
+    if (response.statusCode == 200) {
+      await UserBarang();
+      Get.snackbar("Proses Sukses", "Hapus Barang",
+          backgroundColor: Colors.indigo[900],
+          borderColor: Colors.black,
+          borderWidth: 1,
+          colorText: Colors.white);
+    } else {
+      Get.snackbar("Gagal", "Silahkan Hapus Ulang",
+          backgroundColor: Colors.indigo[900],
+          borderColor: Colors.black,
+          borderWidth: 1,
+          colorText: Colors.white);
+    }
+  }
+
+  final String baseurl = 'https://wiwindendriani.000webhostapp.com/api/detail';
+  dynamic barang;
+
+  Future<void> detail(int selectId) async {
+    try {
+      final response = await dio.get("$baseurl/$selectId");
+      if (response.statusCode == 200) {
+        print(response.data);
+        barang = response.data;
+        print("data barang : $barang");
+        Get.to(EditBarangView(
+          detail: response.data,
+        ));
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -142,42 +186,76 @@ class _HomeViewState extends State<HomeView> {
               child: Container(
                 width: MQW,
                 height: MQH * 0.7,
-                child: ListView.builder(
-                  itemCount: dataBarang.length,
-                  itemBuilder: (context, index) {
-                    final barang = dataBarang[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(QRCodeView());
-                      },
-                      child: Slidable(
-                        endActionPane:
-                            ActionPane(motion: const DrawerMotion(), children: [
-                          SlidableAction(
-                              backgroundColor: Colors.blue,
-                              icon: Icons.edit,
-                              label: 'Edit Barang',
-                              onPressed: (context) {
-                                Get.to(EditBarangView());
-                              }),
-                          SlidableAction(
-                              backgroundColor: Colors.red,
-                              icon: Icons.delete,
-                              label: 'Hapus Barang',
-                              onPressed: (context) {})
-                        ]),
-                        child: Card(
-                          child: ListTile(
-                            title: Text(barang['nama']),
-                            leading: Image.asset('images/wi.png'),
-                            subtitle: Text(barang['tanggal'],
-                                overflow: TextOverflow.ellipsis),
-                          ),
+                child: dataBarang.isEmpty
+                    ? Shimmer.fromColors(
+                        baseColor: Colors.grey,
+                        highlightColor: Color(0xffC0392B),
+                        child: ListView.builder(
+                          itemCount: 8,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                'Tunggu Sebentar',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              leading: Icon(
+                                Icons.image_rounded,
+                                size: 30,
+                              ),
+                              subtitle: Text('Sedang Load Barang',
+                                  style: TextStyle(fontFamily: 'Poppins')),
+                            );
+                          },
                         ),
+                      )
+                    : ListView.builder(
+                        itemCount: dataBarang.length,
+                        itemBuilder: (context, index) {
+                          final barang = dataBarang[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Get.to(QRCodeView(
+                                detail: barang,
+                              ));
+                            },
+                            child: Slidable(
+                              endActionPane: ActionPane(
+                                  motion: const DrawerMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      backgroundColor: Colors.blue,
+                                      icon: Icons.edit,
+                                      label: 'Edit Barang',
+                                      onPressed: (context) {
+                                        detail(barang['id']);
+                                      },
+                                    ),
+                                    SlidableAction(
+                                      backgroundColor: Colors.red,
+                                      icon: Icons.delete,
+                                      label: 'Hapus Barang',
+                                      onPressed: (context) {
+                                        hapus(barang['id']);
+                                      },
+                                    ),
+                                  ]),
+                              child: Card(
+                                child: ListTile(
+                                  title: Text(barang['nama']),
+                                  leading: Icon(
+                                    Icons.image_rounded,
+                                    size: 30,
+                                  ),
+                                  subtitle: Text(barang['tanggal'],
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ),
           ],

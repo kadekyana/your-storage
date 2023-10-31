@@ -4,6 +4,8 @@ import '../modules/AfterSplash/bindings/after_splash_binding.dart';
 import '../modules/AfterSplash/views/after_splash_view.dart';
 import '../modules/BottomBar/bindings/bottom_bar_binding.dart';
 import '../modules/BottomBar/views/bottom_bar_view.dart';
+import '../modules/CheckGlobalNetwork/bindings/check_global_network_binding.dart';
+import '../modules/CheckGlobalNetwork/views/check_global_network_view.dart';
 import '../modules/DetailBarang/bindings/detail_barang_binding.dart';
 import '../modules/DetailBarang/views/detail_barang_view.dart';
 import '../modules/EditBarang/bindings/edit_barang_binding.dart';
@@ -70,7 +72,9 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.Q_R_CODE,
-      page: () => const QRCodeView(),
+      page: () => QRCodeView(
+        detail: null,
+      ),
       binding: QRCodeBinding(),
     ),
     GetPage(
@@ -87,7 +91,9 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.EDIT_BARANG,
-      page: () => EditBarangView(),
+      page: () => EditBarangView(
+        detail: null,
+      ),
       binding: EditBarangBinding(),
     ),
     GetPage(

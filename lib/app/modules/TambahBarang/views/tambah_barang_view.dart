@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
 import 'package:your_storage/app/widget/custom_date.dart';
@@ -18,12 +19,30 @@ class TambahBarangView extends StatefulWidget {
 class _TambahBarangViewState extends State<TambahBarangView> {
   final _formkey = GlobalKey<FormState>();
   final TambahBarangController controller = Get.put(TambahBarangController());
-  File? pickImage;
 
   Map<String, int> valueMapping = {
     "Elektronik": 1,
     "Non Elektronik": 2,
   };
+
+  // final ImagePicker picker = ImagePicker();
+  // File? picselect;
+  // void selectImage() async {
+  //   try {
+  //     XFile? select = await picker.pickImage(source: ImageSource.gallery);
+
+  //     if (select != null) {
+  //       print(select.name);
+  //       print(select.path);
+  //       setState(() {
+  //         picselect = File(select.path);
+  //       });
+  //     }
+  //   } catch (err) {
+  //     print(err);
+  //     picselect = null;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +120,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                                 suffixIcon: Icon(Icons.edit)),
                           ),
                           controller.dropdownForm(
-                              items: ["", "Elektronik", "Non Elektronik"]
+                              items: ["Elektronik", "Non Elektronik"]
                                   .map((String item) {
                                 return item;
                               }).toList(),
@@ -111,28 +130,6 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                                 });
                               },
                               value: controller.selectedValueDrop),
-                          _dateForm(
-                              hintText: 'Tanggal Input',
-                              controller: controller.tanggal),
-                          SizedBox(
-                            height: MQH * 0.01,
-                          ),
-                          TextFormField(
-                            controller: controller.jumlah,
-                            keyboardType: TextInputType.number,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "jumlah Barang Tidak Boleh Kosong";
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 20),
-                                label: Text('Masukkan Jumlah'),
-                                border: OutlineInputBorder(),
-                                suffixIcon: Icon(Icons.add)),
-                          ),
                           SizedBox(
                             height: MQH * 0.01,
                           ),
@@ -155,6 +152,28 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                             height: MQH * 0.01,
                           ),
                           TextFormField(
+                            controller: controller.jumlah,
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "jumlah Barang Tidak Boleh Kosong";
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 20),
+                                label: Text('Masukkan Jumlah'),
+                                border: OutlineInputBorder(),
+                                suffixIcon: Icon(Icons.add)),
+                          ),
+                          _dateForm(
+                              hintText: 'Tanggal Input',
+                              controller: controller.tanggal),
+                          SizedBox(
+                            height: MQH * 0.01,
+                          ),
+                          TextFormField(
                             keyboardType: TextInputType.number,
                             controller: controller.harga,
                             validator: (value) {
@@ -173,38 +192,59 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                           SizedBox(
                             height: MQH * 0.01,
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 40),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GetBuilder<TambahBarangController>(
-                                    builder: (controller) {
-                                  if (controller.picselect != null) {
-                                    return Row(
-                                      children: [
-                                        Container(
-                                          height: 50,
-                                          width: 50,
-                                          child: CircleAvatar(
-                                              radius: 50,
-                                              backgroundImage: FileImage(File(
-                                                  controller.picselect!.path))),
-                                        ),
-                                        IconButton(
-                                            onPressed: () =>
-                                                controller.deleteImage(),
-                                            icon: Icon(Icons.delete)),
-                                      ],
-                                    );
-                                  } else {
-                                    return Text('No Image');
-                                  }
-                                }),
-                                TextButton(
-                                    onPressed: () => controller.selectImage(),
-                                    child: Text('Choose')),
-                              ],
+                          // Padding(
+                          //   padding: EdgeInsets.symmetric(horizontal: 40),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       GetBuilder<TambahBarangController>(
+                          //           builder: (controller) {
+                          //         if (picselect != null) {
+                          //           return Row(
+                          //             children: [
+                          //               Container(
+                          //                 height: 50,
+                          //                 width: 50,
+                          //                 child: CircleAvatar(
+                          //                     radius: 50,
+                          //                     backgroundImage: FileImage(
+                          //                         File(picselect!.path))),
+                          //               ),
+                          //               // IconButton(
+                          //               //     onPressed: () =>
+                          //               //         controller.deleteImage(),
+                          //               //     icon: Icon(Icons.delete)),
+                          //             ],
+                          //           );
+                          //         } else {
+                          //           return Text('No Image');
+                          //         }
+                          //       }),
+                          //       TextButton(
+                          //           onPressed: () => selectImage(),
+                          //           child: Text('Choose')),
+                          //     ],
+                          //   ),
+                          // ),
+                          Center(
+                            child: FilledButton(
+                              onPressed: () {
+                                controller.clearForm();
+                              },
+                              style: const ButtonStyle(
+                                backgroundColor:
+                                    MaterialStatePropertyAll(Colors.indigo),
+                                padding: MaterialStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 80),
+                                ),
+                              ),
+                              child: Text(
+                                'Bersihkan Form',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w700),
+                              ),
                             ),
                           ),
                           Spacer(),

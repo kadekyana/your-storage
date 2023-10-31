@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:your_storage/app/modules/DetailBarang/views/detail_barang_view.dart';
+import 'package:your_storage/app/modules/Profile/views/profile_view.dart';
 import '../controllers/scanner_controller.dart';
 
 class ScannerView extends StatefulWidget {
@@ -33,10 +34,7 @@ class _ScannerViewState extends State<ScannerView> {
       ),
       body: Column(
         children: <Widget>[
-          Expanded(
-            flex: 4,
-            child: _buildQrView(context),
-          ),
+          Expanded(flex: 4, child: _buildQrView(context)),
           Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.08,
@@ -44,18 +42,13 @@ class _ScannerViewState extends State<ScannerView> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 if (result != null)
-                  Builder(builder: (context) {
-                    // Pindah ke halaman DetailView dengan membawa data hasil scan secara otomatis
-                    Future.delayed(Duration(seconds: 2), () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => DetailBarangView(
-                              qrResult: result!.code.toString()),
-                        ),
-                      );
-                    });
-                    return Text('Scan Berhasil - Mengarahkan ke DetailView...');
-                  })
+                  TextButton(
+                    onPressed: () {
+                      Get.to(
+                          DetailBarangView(qrResult: result!.code.toString()));
+                    },
+                    child: Text('Scan Berhasil - Klik Disini Untuk Transfer'),
+                  )
                 else
                   Text(
                     'Scan Code',
