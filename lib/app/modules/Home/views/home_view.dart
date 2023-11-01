@@ -217,7 +217,7 @@ class _HomeViewState extends State<HomeView> {
                           return GestureDetector(
                             onTap: () {
                               Get.to(QRCodeView(
-                                detail: barang,
+                                detail: barang['id'].toString(),
                               ));
                             },
                             child: Slidable(

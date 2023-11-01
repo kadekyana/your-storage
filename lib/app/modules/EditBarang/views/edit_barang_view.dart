@@ -41,7 +41,6 @@ class _EditBarangViewState extends State<EditBarangView> {
 
   @override
   void dispose() {
-    // Pastikan untuk membebaskan sumber daya saat widget dihapus
     namaC.dispose();
     warnaC.dispose();
     jumlahC.dispose();
@@ -75,7 +74,7 @@ class _EditBarangViewState extends State<EditBarangView> {
               ),
             ),
             Positioned(
-                top: 40,
+                top: 170,
                 left: 10,
                 child: Text(
                   'EDIT',
@@ -86,7 +85,7 @@ class _EditBarangViewState extends State<EditBarangView> {
                       fontWeight: FontWeight.w700),
                 )),
             Positioned(
-              top: 70,
+              top: 200,
               left: 10,
               child: Text(
                 'BARANG',
@@ -101,16 +100,16 @@ class _EditBarangViewState extends State<EditBarangView> {
               bottom: 0,
               child: Container(
                 width: MQW,
-                height: MQH * 0.8,
+                height: MQH * 0.65,
                 child: Card(
                   elevation: 10,
                   child: Form(
                     key: _formkey,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                          horizontal: 40, vertical: 20),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextFormField(
                             controller: namaC,
@@ -230,7 +229,6 @@ class _EditBarangViewState extends State<EditBarangView> {
                           //     ],
                           //   ),
                           // ),
-                          Spacer(),
                           Center(
                             child: FilledButton(
                               onPressed: () {
@@ -261,9 +259,6 @@ class _EditBarangViewState extends State<EditBarangView> {
                                     fontWeight: FontWeight.w700),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: MQH * 0.04,
                           ),
                         ],
                       ),

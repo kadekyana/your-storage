@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:your_storage/app/modules/Login/controllers/login_controller.dart';
+import 'package:your_storage/app/modules/splashScreen/controllers/splash_screen_controller.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -14,6 +15,7 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   final LoginController login = Get.put(LoginController());
+  final SplashScreenController splash = Get.put(SplashScreenController());
   @override
   Widget build(BuildContext context) {
     final MQW = MediaQuery.of(context).size.width;
@@ -33,11 +35,11 @@ class _ProfileViewState extends State<ProfileView> {
                   bottomRight: Radius.circular(20),
                 ),
               ),
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Dwi Gitayana',
+                    '${login.data.isNotEmpty ? login.data[0]['nama'] : splash.data[0]['nama']}',
                     style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Poppins',
@@ -45,7 +47,7 @@ class _ProfileViewState extends State<ProfileView> {
                         fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    'Dwi@gmail.com',
+                    '${login.data.isNotEmpty ? login.data[0]['email'] : splash.data[0]['email']}',
                     style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Poppins',

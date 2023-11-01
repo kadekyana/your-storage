@@ -19,18 +19,17 @@ class _ScannerViewState extends State<ScannerView> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(Icons.arrow_back)),
+          onPressed: () {
+            controller?.dispose(); // Matikan kamera sebelum kembali
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -42,13 +41,28 @@ class _ScannerViewState extends State<ScannerView> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 if (result != null)
-                  TextButton(
-                    onPressed: () {
+                  Builder(builder: (context) {
+                    Future.delayed(Duration(seconds: 5), () {
+                      controller?.dispose();
                       Get.to(
-                          DetailBarangView(qrResult: result!.code.toString()));
-                    },
-                    child: Text('Scan Berhasil - Klik Disini Untuk Transfer'),
-                  )
+                        DetailBarangView(
+                          qrResult: result!.code.toString(),
+                        ),
+                      );
+                    });
+                    return Center(
+                      child: Text('Berhasil Scan'),
+                    );
+                  })
+                // TextButton(
+                //   onPressed: () {
+                //     controller?.dispose();
+                //     Get.to(
+                //       DetailBarangView(qrResult: result!.code.toString()),
+                //     );
+                //   },
+                //   child: Text('Scan Berhasil - Klik Disini Untuk Transfer'),
+                // )
                 else
                   Text(
                     'Scan Code',
@@ -56,20 +70,17 @@ class _ScannerViewState extends State<ScannerView> {
                   ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
   Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
         ? 150.0
         : 300.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
@@ -90,12 +101,12 @@ class _ScannerViewState extends State<ScannerView> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+        controller.pauseCamera();
       });
     });
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('no Permission')),

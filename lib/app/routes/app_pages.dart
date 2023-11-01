@@ -73,7 +73,7 @@ class AppPages {
     GetPage(
       name: _Paths.Q_R_CODE,
       page: () => QRCodeView(
-        detail: null,
+        detail: '',
       ),
       binding: QRCodeBinding(),
     ),

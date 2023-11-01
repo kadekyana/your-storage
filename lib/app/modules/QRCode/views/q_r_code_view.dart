@@ -6,7 +6,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../controllers/q_r_code_controller.dart';
 
 class QRCodeView extends StatefulWidget {
-  final dynamic detail;
+  final String detail;
   QRCodeView({Key? key, required this.detail}) : super(key: key);
   @override
   State<QRCodeView> createState() => _QRCodeViewState();
@@ -14,7 +14,7 @@ class QRCodeView extends StatefulWidget {
 
 class _QRCodeViewState extends State<QRCodeView> {
   final QRCodeController qr = Get.put(QRCodeController());
-  late Map<String, dynamic> idDetail;
+  late String idDetail;
   @override
   void initState() {
     super.initState();
@@ -60,7 +60,7 @@ class _QRCodeViewState extends State<QRCodeView> {
                   ),
                   Divider(),
                   QrImageView(
-                    data: 'kulkas',
+                    data: widget.detail.toString(),
                     version: QrVersions.auto,
                     size: 200,
                     gapless: false,

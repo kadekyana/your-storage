@@ -74,6 +74,7 @@ class TambahBarangController extends GetxController {
         print('Success');
         print(response.data);
         Get.to(BottomBarView());
+        dispose();
         Get.snackbar("Sukses", "Tambah Barang",
             backgroundColor: Colors.indigo[900],
             borderColor: Colors.black,
