@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:dio/src/multipart_file.dart' as dio_file;
+import 'package:dio/dio.dart' as dioo;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData;
 import 'package:image_picker/image_picker.dart';
@@ -35,10 +35,30 @@ class TambahBarangController extends GetxController {
     tanggal.clear();
   }
 
-  // void deleteImage() {
-  //   picselect = null;
-  //   update();
-  // }
+  final ImagePicker picker = ImagePicker();
+  XFile? picselect;
+
+  void selectImage() async {
+    try {
+      final select = await picker.pickImage(source: ImageSource.camera);
+
+      if (select != null) {
+        print(select.name);
+        print(select.path);
+        picselect = select;
+        update();
+      }
+    } catch (err) {
+      print(err);
+      picselect = null;
+      update();
+    }
+  }
+
+  void deleteImage() {
+    picselect = null;
+    update();
+  }
 
   Future<void> tambah(String nama, String warna, String jumlah, String harga,
       String tanggal) async {
@@ -48,44 +68,48 @@ class TambahBarangController extends GetxController {
         : splash.data[0]['user_id'];
 
     print(userid);
-    // List<int> imageBytes = File(picselect!.path).readAsBytesSync();
-    try {
-      FormData formData = FormData.fromMap({
-        'user_id': userid,
-        'kategori_id': kategoriId,
-        'nama': nama,
-        'warna': warna,
-        'jumlah': jumlah,
-        'tanggal': tanggal,
-        'harga': harga,
-        // 'image': await dio_file.MultipartFile.fromFile(image)
-      });
+    if (picselect != null) {
+      print(picselect!.path);
+      try {
+        FormData formData = FormData.fromMap({
+          'user_id': userid,
+          'kategori_id': kategoriId,
+          'nama': nama,
+          'warna': warna,
+          'jumlah': jumlah,
+          'tanggal': tanggal,
+          'harga': harga,
+          'image': dioo.MultipartFile.fromFile(picselect!.path,
+              filename: 'image.png'),
+        });
 
-      final response = await dio.post(
-        baseurl,
-        data: formData,
-        // options: Options(
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data',
-        //   },
-        // ),
-      );
-      if (response.statusCode == 200) {
-        print('Success');
-        print(response.data);
-        Get.to(BottomBarView());
-        dispose();
-        Get.snackbar("Sukses", "Tambah Barang",
-            backgroundColor: Colors.indigo[900],
-            borderColor: Colors.black,
-            borderWidth: 1,
-            colorText: Colors.white);
-        return response.data;
-      } else {
-        print('Gagal');
+        final response = await dio.post(
+          baseurl,
+          data: formData,
+          options: Options(
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          print('Success');
+          print(response.data);
+          Get.to(BottomBarView());
+          dispose();
+          Get.snackbar("Sukses", "Tambah Barang",
+              backgroundColor: Colors.indigo[900],
+              borderColor: Colors.black,
+              borderWidth: 1,
+              colorText: Colors.white);
+          return response.data;
+        } else {
+          print('Gagal');
+        }
+      } catch (e) {
+        print('Kesalahan: $e');
       }
-    } catch (e) {
-      print('Kesalahan: $e');
     }
   }
 

@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
-import '../controllers/detail_barang_controller.dart';
 
 class DetailBarangView extends StatefulWidget {
   String qrResult;
@@ -17,6 +14,7 @@ class DetailBarangView extends StatefulWidget {
 
 class _DetailBarangViewState extends State<DetailBarangView> {
   final String baseurl = 'https://wiwindendriani.000webhostapp.com/api/detail';
+
   dynamic barang = [];
   Dio dio = Dio();
   Future<void> detail(String qrResult) async {
@@ -40,6 +38,12 @@ class _DetailBarangViewState extends State<DetailBarangView> {
     Future.delayed(Duration(seconds: 1), () {
       detail(widget.qrResult);
     });
+  }
+
+  @override
+  void dispose() {
+    barang.dispose;
+    super.dispose();
   }
 
   @override
@@ -80,17 +84,21 @@ class _DetailBarangViewState extends State<DetailBarangView> {
                   ),
                   Positioned(
                     child: Container(
-                      width: MQW,
-                      height: MQH * 0.25,
-                      child: Image.asset(
-                        'images/bg.jpg',
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+                        width: MQW,
+                        height: MQH * 0.25,
+                        child: Image(
+                          image: NetworkImage(
+                              'https://wiwindendriani.000webhostapp.com/${barang['data']['gambar']}'),
+                          fit: BoxFit.fill,
+                        )),
                   ),
                   Positioned(
                     child: IconButton(
                       onPressed: () {
+                        barang.clear();
+                        widget.qrResult = '';
+                        print(widget.qrResult);
+                        print(barang);
                         Get.to(BottomBarView());
                       },
                       icon: Icon(Icons.arrow_back),

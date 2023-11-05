@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_storage/app/modules/AfterSplash/views/after_splash_view.dart';
 import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
+import 'package:your_storage/app/modules/OnBoarding/views/on_boarding_view.dart';
 
 class SplashScreenController extends GetxController {
   //TODO: Implement SplashScreenController
@@ -51,9 +52,11 @@ class SplashScreenController extends GetxController {
     var duration = Duration(seconds: 3);
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     bool Login = preferences.getBool('Login') ?? false;
-    // bool Onboarding = preferences.getBool('Getstart') ?? false;
+    bool Onboarding = preferences.getBool('Getstart') ?? false;
     return Timer(duration, () async {
-      if (Login) {
+      if (Onboarding == false) {
+        Get.to(OnboardingView());
+      } else if (Login) {
         String? User_id = preferences.getString('User_id');
         String? Nama = preferences.getString('Nama');
         String? Email = preferences.getString('Email');

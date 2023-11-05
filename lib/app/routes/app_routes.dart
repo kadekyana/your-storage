@@ -16,6 +16,7 @@ abstract class Routes {
   static const EDIT_BARANG = _Paths.EDIT_BARANG;
   static const SCANNER = _Paths.SCANNER;
   static const CHECK_GLOBAL_NETWORK = _Paths.CHECK_GLOBAL_NETWORK;
+  static const ON_BOARDING = _Paths.ON_BOARDING;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const EDIT_BARANG = '/edit-barang';
   static const SCANNER = '/scanner';
   static const CHECK_GLOBAL_NETWORK = '/check-global-network';
+  static const ON_BOARDING = '/on-boarding';
 }

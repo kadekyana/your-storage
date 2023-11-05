@@ -244,10 +244,13 @@ class _HomeViewState extends State<HomeView> {
                               child: Card(
                                 child: ListTile(
                                   title: Text(barang['nama']),
-                                  leading: Icon(
-                                    Icons.image_rounded,
-                                    size: 30,
-                                  ),
+                                  leading: barang['gambar'] != null
+                                      ? CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            'https://wiwindendriani.000webhostapp.com/${barang['gambar']}',
+                                          ),
+                                        )
+                                      : Icon(Icons.image),
                                   subtitle: Text(barang['tanggal'],
                                       overflow: TextOverflow.ellipsis),
                                 ),

@@ -14,6 +14,8 @@ import '../modules/Home/bindings/home_binding.dart';
 import '../modules/Home/views/home_view.dart';
 import '../modules/Login/bindings/login_binding.dart';
 import '../modules/Login/views/login_view.dart';
+import '../modules/OnBoarding/bindings/on_boarding_binding.dart';
+import '../modules/OnBoarding/views/on_boarding_view.dart';
 import '../modules/Profile/bindings/profile_binding.dart';
 import '../modules/Profile/views/profile_view.dart';
 import '../modules/QRCode/bindings/q_r_code_binding.dart';
@@ -100,6 +102,11 @@ class AppPages {
       name: _Paths.SCANNER,
       page: () => const ScannerView(),
       binding: ScannerBinding(),
+    ),
+    GetPage(
+      name: _Paths.ON_BOARDING,
+      page: () => OnboardingView(),
+      binding: OnBoardingBinding(),
     ),
   ];
 }

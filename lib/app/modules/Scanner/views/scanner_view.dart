@@ -25,7 +25,7 @@ class _ScannerViewState extends State<ScannerView> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            controller?.dispose(); // Matikan kamera sebelum kembali
+            controller?.dispose();
             Get.back();
           },
           icon: Icon(Icons.arrow_back),
@@ -48,7 +48,10 @@ class _ScannerViewState extends State<ScannerView> {
                         DetailBarangView(
                           qrResult: result!.code.toString(),
                         ),
-                      );
+                      )?.then((value) {
+                        result = "" as Barcode?;
+                        print(result);
+                      });
                     });
                     return Center(
                       child: Text('Berhasil Scan'),

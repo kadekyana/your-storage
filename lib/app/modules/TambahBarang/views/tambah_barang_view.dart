@@ -192,62 +192,40 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                           SizedBox(
                             height: MQH * 0.01,
                           ),
-                          // Padding(
-                          //   padding: EdgeInsets.symmetric(horizontal: 40),
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       GetBuilder<TambahBarangController>(
-                          //           builder: (controller) {
-                          //         if (picselect != null) {
-                          //           return Row(
-                          //             children: [
-                          //               Container(
-                          //                 height: 50,
-                          //                 width: 50,
-                          //                 child: CircleAvatar(
-                          //                     radius: 50,
-                          //                     backgroundImage: FileImage(
-                          //                         File(picselect!.path))),
-                          //               ),
-                          //               // IconButton(
-                          //               //     onPressed: () =>
-                          //               //         controller.deleteImage(),
-                          //               //     icon: Icon(Icons.delete)),
-                          //             ],
-                          //           );
-                          //         } else {
-                          //           return Text('No Image');
-                          //         }
-                          //       }),
-                          //       TextButton(
-                          //           onPressed: () => selectImage(),
-                          //           child: Text('Choose')),
-                          //     ],
-                          //   ),
-                          // ),
-                          // Center(
-                          //   child: FilledButton(
-                          //     onPressed: () {
-                          //       controller.clearForm();
-                          //     },
-                          //     style: const ButtonStyle(
-                          //       backgroundColor:
-                          //           MaterialStatePropertyAll(Colors.indigo),
-                          //       padding: MaterialStatePropertyAll(
-                          //         EdgeInsets.symmetric(
-                          //             vertical: 10, horizontal: 80),
-                          //       ),
-                          //     ),
-                          //     child: Text(
-                          //       'Bersihkan Form',
-                          //       style: TextStyle(
-                          //           fontFamily: 'Poppins',
-                          //           fontWeight: FontWeight.w700),
-                          //     ),
-                          //   ),
-                          // ),
-                          // Spacer(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GetBuilder<TambahBarangController>(
+                                  builder: (controller) =>
+                                      controller.picselect != null
+                                          ? Row(
+                                              children: [
+                                                Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  child: CircleAvatar(
+                                                    radius: 50,
+                                                    backgroundImage: FileImage(
+                                                        File(controller
+                                                            .picselect!.path)),
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                    onPressed: () => controller
+                                                        .deleteImage(),
+                                                    icon: Icon(Icons.delete)),
+                                              ],
+                                            )
+                                          : Text('No Image'),
+                                ),
+                                TextButton(
+                                    onPressed: () => controller.selectImage(),
+                                    child: Text('Choose')),
+                              ],
+                            ),
+                          ),
                           Center(
                             child: FilledButton(
                               onPressed: () {
