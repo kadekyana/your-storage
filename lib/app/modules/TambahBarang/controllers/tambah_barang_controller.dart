@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:dio/dio.dart' as dioo;
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData;
 import 'package:image_picker/image_picker.dart';
@@ -33,20 +33,23 @@ class TambahBarangController extends GetxController {
     harga.clear();
     warna.clear();
     tanggal.clear();
+    picselect = null;
   }
 
   final ImagePicker picker = ImagePicker();
-  XFile? picselect;
+  File? picselect;
 
   void selectImage() async {
     try {
-      final select = await picker.pickImage(source: ImageSource.camera);
+      final select = await picker.pickImage(source: ImageSource.gallery);
 
       if (select != null) {
         print(select.name);
         print(select.path);
-        picselect = select;
+        picselect = File(select.path);
         update();
+        print(picselect);
+        print('pickselect ${picselect?.path}');
       }
     } catch (err) {
       print(err);
@@ -61,15 +64,15 @@ class TambahBarangController extends GetxController {
   }
 
   Future<void> tambah(String nama, String warna, String jumlah, String harga,
-      String tanggal) async {
+      String tanggal, File image) async {
     int kategoriId = selectedValueDrop == "Elektronik" ? 1 : 2;
     final userid = login.data.isNotEmpty
         ? login.data[0]['user_id']
         : splash.data[0]['user_id'];
 
     print(userid);
-    if (picselect != null) {
-      print(picselect!.path);
+    if (image != null) {
+      print('cek setelah dalam fuction : ${image.path}');
       try {
         FormData formData = FormData.fromMap({
           'user_id': userid,
@@ -79,10 +82,11 @@ class TambahBarangController extends GetxController {
           'jumlah': jumlah,
           'tanggal': tanggal,
           'harga': harga,
-          'image': dioo.MultipartFile.fromFile(picselect!.path,
-              filename: 'image.png'),
+          'gambar': await dioo.MultipartFile.fromFileSync(image.path,
+              filename: 'image.jpg')
         });
 
+        final dio = Dio();
         final response = await dio.post(
           baseurl,
           data: formData,
@@ -97,7 +101,7 @@ class TambahBarangController extends GetxController {
           print('Success');
           print(response.data);
           Get.to(BottomBarView());
-          dispose();
+          clearForm();
           Get.snackbar("Sukses", "Tambah Barang",
               backgroundColor: Colors.indigo[900],
               borderColor: Colors.black,

@@ -120,43 +120,24 @@ class _HomeViewState extends State<HomeView> {
               height: MQH,
             ),
             const Positioned(
-                top: 30,
+                top: 80,
                 left: 10,
                 child: Text(
                   'YOUR',
                   style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 20,
+                      fontSize: 30,
                       fontWeight: FontWeight.w700),
                 )),
             const Positioned(
-              top: 50,
+              top: 115,
               left: 10,
               child: Text(
                 'STORAGE',
                 style: TextStyle(
                     fontFamily: 'Poppins',
-                    fontSize: 20,
+                    fontSize: 30,
                     fontWeight: FontWeight.w700),
-              ),
-            ),
-            Positioned(
-              top: 90,
-              left: 10,
-              child: Form(
-                child: Container(
-                  width: MQW * 0.7,
-                  height: MQH * 0.07,
-                  child: TextFormField(
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                    ),
-                    decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.search),
-                        label: Text('Search'),
-                        border: OutlineInputBorder()),
-                  ),
-                ),
               ),
             ),
             Positioned(

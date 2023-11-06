@@ -21,6 +21,7 @@ class LoginController extends GetxController {
   List data = [];
   String UserId = '';
   String token = '';
+
   Future<void> login(String email, String password) async {
     try {
       final response = await dio.post(
@@ -80,7 +81,6 @@ class LoginController extends GetxController {
     pref.remove('Token');
     pref.remove('token');
     pref.remove('Login');
-    pref.clear();
     splash.data.clear();
     data.clear();
     print('datalogin - logout : $data');

@@ -195,53 +195,54 @@ class _EditBarangViewState extends State<EditBarangView> {
                           SizedBox(
                             height: MQH * 0.01,
                           ),
-                          // Padding(
-                          //   padding: EdgeInsets.symmetric(horizontal: 40),
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       GetBuilder<TambahBarangController>(
-                          //           builder: (controller) {
-                          //         if (image != null) {
-                          //           return Row(
-                          //             children: [
-                          //               Container(
-                          //                 height: 50,
-                          //                 width: 50,
-                          //                 child: CircleAvatar(
-                          //                     radius: 50,
-                          //                     backgroundImage:
-                          //                         FileImage(File(image!.path))),
-                          //               ),
-                          //               IconButton(
-                          //                   onPressed: () => (),
-                          //                   icon: Icon(Icons.upload_file)),
-                          //             ],
-                          //           );
-                          //         } else {
-                          //           return Text('No Image');
-                          //         }
-                          //       }),
-                          //       TextButton(
-                          //           // ignore: void_checks
-                          //           onPressed: () => selectImage(),
-                          //           child: Text('Choose')),
-                          //     ],
-                          //   ),
-                          // ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GetBuilder<EditBarangController>(
+                                  builder: (controller) =>
+                                      controller.picselect != null
+                                          ? Row(
+                                              children: [
+                                                Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  child: CircleAvatar(
+                                                    radius: 50,
+                                                    backgroundImage: FileImage(
+                                                        File(controller
+                                                            .picselect!.path)),
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                    onPressed: () => controller
+                                                        .deleteImage(),
+                                                    icon: Icon(Icons.delete)),
+                                              ],
+                                            )
+                                          : Text('No Image'),
+                                ),
+                                TextButton(
+                                    onPressed: () => controller.selectImage(),
+                                    child: Text('Choose')),
+                              ],
+                            ),
+                          ),
                           Center(
                             child: FilledButton(
                               onPressed: () {
                                 if (_formkey.currentState!.validate()) {
                                   _formkey.currentState!.save();
                                   Get.to(BottomBarView());
-                                  return controller.updateBarang(
+                                  controller.updateBarang(
                                       namaC.text,
                                       warnaC.text,
                                       jumlahC.text,
                                       hargaC.text,
                                       tanggalC.text,
-                                      id);
+                                      id,
+                                      controller.picselect!);
                                 }
                               },
                               style: const ButtonStyle(

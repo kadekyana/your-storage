@@ -89,7 +89,7 @@ class _DetailBarangViewState extends State<DetailBarangView> {
                         child: Image(
                           image: NetworkImage(
                               'https://wiwindendriani.000webhostapp.com/${barang['data']['gambar']}'),
-                          fit: BoxFit.fill,
+                          fit: BoxFit.fitWidth,
                         )),
                   ),
                   Positioned(

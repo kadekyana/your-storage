@@ -38,6 +38,13 @@ class _ProfileViewState extends State<ProfileView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Container(
+                    height: 150,
+                    width: 150,
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage('images/default.png'),
+                    ),
+                  ),
                   Text(
                     '${login.data.isNotEmpty ? login.data[0]['nama'] : splash.data[0]['nama']}',
                     style: TextStyle(

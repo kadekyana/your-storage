@@ -60,6 +60,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
             Positioned(
               child: IconButton(
                 onPressed: () {
+                  controller.clearForm();
                   Get.back();
                 },
                 icon: Icon(Icons.arrow_back),
@@ -237,7 +238,8 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                                       controller.warna.text,
                                       controller.jumlah.text,
                                       controller.harga.text,
-                                      controller.tanggal.text);
+                                      controller.tanggal.text,
+                                      controller.picselect!);
                                 }
                               },
                               style: const ButtonStyle(

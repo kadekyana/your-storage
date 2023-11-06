@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
 import 'package:your_storage/app/modules/Registrasi/views/registrasi_view.dart';
 
@@ -14,6 +15,9 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  final RoundedLoadingButtonController btnController =
+      RoundedLoadingButtonController();
+
   final LoginController controller = Get.put(LoginController());
 
   final _formkey = GlobalKey<FormState>();
@@ -148,30 +152,53 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     Center(
-                      child: FilledButton(
+                      child: RoundedLoadingButton(
+                        color: Color(0xffC0392B),
+                        controller: btnController,
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             _formkey.currentState!.save();
-                            Get.to(BottomBarView());
                             controller.login(controller.email.text,
                                 controller.password.text);
+                            Future.delayed(Duration(seconds: 2), () {
+                              btnController.reset();
+                            });
                           }
                         },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Color(0xffC0392B)),
-                          padding: MaterialStatePropertyAll(
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 80),
-                          ),
-                        ),
                         child: Text(
                           'Login',
                           style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w700),
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
+                    // Center(
+                    //   child: FilledButton(
+                    //     onPressed: () {
+                    //       if (_formkey.currentState!.validate()) {
+                    //         _formkey.currentState!.save();
+                    //         Get.to(BottomBarView());
+                    //         controller.login(controller.email.text,
+                    //             controller.password.text);
+                    //       }
+                    //     },
+                    //     style: ButtonStyle(
+                    //       backgroundColor:
+                    //           MaterialStatePropertyAll(Color(0xffC0392B)),
+                    //       padding: MaterialStatePropertyAll(
+                    //         EdgeInsets.symmetric(vertical: 10, horizontal: 80),
+                    //       ),
+                    //     ),
+                    //     child: Text(
+                    //       'Login',
+                    //       style: TextStyle(
+                    //           fontFamily: 'Poppins',
+                    //           fontWeight: FontWeight.w700),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
