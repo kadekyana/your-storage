@@ -1,51 +1,53 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
-import 'package:your_storage/app/widget/custom_date.dart';
+import 'package:your_storage/app/modules/Login/controllers/login_controller.dart';
+import 'package:your_storage/app/modules/Profile/views/profile_view.dart';
+import 'package:your_storage/app/modules/splashScreen/controllers/splash_screen_controller.dart';
 
-import '../controllers/tambah_barang_controller.dart';
+import '../controllers/edit_user_controller.dart';
 
-// ignore: must_be_immutable
-class TambahBarangView extends StatefulWidget {
-  TambahBarangView({Key? key}) : super(key: key);
+class EditUserView extends StatefulWidget {
+  const EditUserView({Key? key}) : super(key: key);
 
   @override
-  State<TambahBarangView> createState() => _TambahBarangViewState();
+  State<EditUserView> createState() => _EditUserViewState();
 }
 
-class _TambahBarangViewState extends State<TambahBarangView> {
+class _EditUserViewState extends State<EditUserView> {
   final RoundedLoadingButtonController btnController =
       RoundedLoadingButtonController();
+  final LoginController login = Get.put(LoginController());
+  final SplashScreenController splash = Get.put(SplashScreenController());
+  final ImagePicker picker = ImagePicker();
+  File? image;
   final _formkey = GlobalKey<FormState>();
-  final TambahBarangController controller = Get.put(TambahBarangController());
+  final EditUserController controller = Get.put(EditUserController());
+  File? pickImage;
 
-  Map<String, int> valueMapping = {
-    "Elektronik": 1,
-    "Non Elektronik": 2,
-  };
+  final TextEditingController namaC = TextEditingController();
+  final TextEditingController emailC = TextEditingController();
 
-  // final ImagePicker picker = ImagePicker();
-  // File? picselect;
-  // void selectImage() async {
-  //   try {
-  //     XFile? select = await picker.pickImage(source: ImageSource.gallery);
+  @override
+  void initState() {
+    super.initState();
+    namaC.text =
+        login.data.isNotEmpty ? login.data[0]['nama'] : splash.data[0]['nama'];
+    emailC.text = login.data.isNotEmpty
+        ? login.data[0]['email']
+        : splash.data[0]['email'];
+  }
 
-  //     if (select != null) {
-  //       print(select.name);
-  //       print(select.path);
-  //       setState(() {
-  //         picselect = File(select.path);
-  //       });
-  //     }
-  //   } catch (err) {
-  //     print(err);
-  //     picselect = null;
-  //   }
-  // }
+  @override
+  void dispose() {
+    namaC.dispose();
+    emailC.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,6 @@ class _TambahBarangViewState extends State<TambahBarangView> {
             Positioned(
               child: IconButton(
                 onPressed: () {
-                  controller.clearForm();
                   Get.back();
                 },
                 icon: Icon(Icons.arrow_back),
@@ -74,7 +75,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                 top: 170,
                 left: 10,
                 child: Text(
-                  'TAMBAH',
+                  'EDIT',
                   style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Poppins',
@@ -85,7 +86,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
               top: 200,
               left: 10,
               child: Text(
-                'BARANG',
+                'User',
                 style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Poppins',
@@ -104,12 +105,12 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                     key: _formkey,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 20),
+                          horizontal: 40, vertical: 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextFormField(
-                            controller: controller.nama,
+                            controller: namaC,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Nama Tidak Boleh Kosong";
@@ -123,66 +124,15 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                                 border: OutlineInputBorder(),
                                 suffixIcon: Icon(Icons.edit)),
                           ),
-                          controller.dropdownForm(
-                              items: ["Elektronik", "Non Elektronik"]
-                                  .map((String item) {
-                                return item;
-                              }).toList(),
-                              changeValue: (value) {
-                                setState(() {
-                                  controller..selectedValueDrop = value;
-                                });
-                              },
-                              value: controller.selectedValueDrop),
                           SizedBox(
                             height: MQH * 0.01,
                           ),
                           TextFormField(
-                            controller: controller.warna,
+                            keyboardType: TextInputType.emailAddress,
+                            controller: emailC,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Warna Tidak Boleh Kosong";
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 20),
-                                label: Text('Masukkan Warna'),
-                                border: OutlineInputBorder(),
-                                suffixIcon: Icon(Icons.color_lens)),
-                          ),
-                          SizedBox(
-                            height: MQH * 0.01,
-                          ),
-                          TextFormField(
-                            controller: controller.jumlah,
-                            keyboardType: TextInputType.number,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "jumlah Barang Tidak Boleh Kosong";
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 20),
-                                label: Text('Masukkan Jumlah'),
-                                border: OutlineInputBorder(),
-                                suffixIcon: Icon(Icons.add)),
-                          ),
-                          _dateForm(
-                              hintText: 'Tanggal Input',
-                              controller: controller.tanggal),
-                          SizedBox(
-                            height: MQH * 0.01,
-                          ),
-                          TextFormField(
-                            keyboardType: TextInputType.number,
-                            controller: controller.harga,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Harga Tidak Boleh Kosong";
+                                return "Email Tidak Boleh Kosong";
                               }
                               return null;
                             },
@@ -201,7 +151,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                GetBuilder<TambahBarangController>(
+                                GetBuilder<EditUserController>(
                                   builder: (controller) =>
                                       controller.picselect != null
                                           ? Row(
@@ -238,20 +188,14 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                                 Future.delayed(Duration(seconds: 3), () {
                                   if (_formkey.currentState!.validate()) {
                                     _formkey.currentState!.save();
-                                    Get.to(BottomBarView());
-                                    controller.tambah(
-                                        controller.nama.text,
-                                        controller.warna.text,
-                                        controller.jumlah.text,
-                                        controller.harga.text,
-                                        controller.tanggal.text,
-                                        controller.picselect!);
+                                    controller.UpdateUser(namaC.text,
+                                        emailC.text, controller.picselect!);
                                   }
                                   btnController.reset();
                                 });
                               },
                               child: Text(
-                                'TAMBAH BARANG',
+                                'EDIT PROFILE',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.w700,
@@ -269,33 +213,6 @@ class _TambahBarangViewState extends State<TambahBarangView> {
           ],
         ),
       ),
-    );
-  }
-
-  Column _dateForm(
-      {required String hintText, required TextEditingController controller}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 8),
-        SuffixIconTextField(
-          onTap: () async {
-            final DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2025));
-
-            if (picked != null) {
-              String formattedDate = DateFormat('dd-MM-yyy').format(picked);
-              controller.text = formattedDate;
-            }
-          },
-          hintText: hintText,
-          controller: controller,
-          icon: Icon(Icons.calendar_today),
-        ),
-      ],
     );
   }
 }

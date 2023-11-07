@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:your_storage/app/modules/TambahBarang/controllers/tambah_barang_controller.dart';
 
 import '../controllers/q_r_code_controller.dart';
 

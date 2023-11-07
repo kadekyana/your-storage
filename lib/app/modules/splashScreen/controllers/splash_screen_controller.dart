@@ -59,10 +59,17 @@ class SplashScreenController extends GetxController {
       } else if (Login) {
         String? User_id = preferences.getString('User_id');
         String? Nama = preferences.getString('Nama');
+        String? Gambar = preferences.getString('Gambar');
         String? Email = preferences.getString('Email');
         String? Token = preferences.getString('Token');
         data = [
-          {'user_id': User_id, 'nama': Nama, 'email': Email, 'token': Token}
+          {
+            'user_id': User_id,
+            'nama': Nama,
+            'email': Email,
+            'gambar': Gambar,
+            'token': Token
+          }
         ];
         Get.to(BottomBarView());
       } else {

@@ -23,8 +23,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final LoginController login = Get.put(LoginController());
   final HomeController home = Get.put(HomeController());
+  final LoginController login = Get.put(LoginController());
   final SplashScreenController splash = Get.put(SplashScreenController());
 
   @override

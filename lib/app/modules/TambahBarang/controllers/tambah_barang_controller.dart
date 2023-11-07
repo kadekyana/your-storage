@@ -100,14 +100,16 @@ class TambahBarangController extends GetxController {
         if (response.statusCode == 200) {
           print('Success');
           print(response.data);
-          Get.to(BottomBarView());
           clearForm();
-          Get.snackbar("Sukses", "Tambah Barang",
-              backgroundColor: Colors.indigo[900],
-              borderColor: Colors.black,
-              borderWidth: 1,
-              colorText: Colors.white);
-          return response.data;
+          Future.delayed(Duration(seconds: 4), () {
+            Get.to(BottomBarView());
+            Get.snackbar("Sukses", "Tambah Barang",
+                backgroundColor: Colors.indigo[900],
+                borderColor: Colors.black,
+                borderWidth: 1,
+                colorText: Colors.white);
+            return response.data;
+          });
         } else {
           print('Gagal');
         }

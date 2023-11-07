@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:your_storage/app/modules/Login/views/login_view.dart';
 
 import '../controllers/registrasi_controller.dart';
@@ -13,6 +14,8 @@ class RegistrasiView extends StatefulWidget {
 }
 
 class _RegistrasiViewState extends State<RegistrasiView> {
+  final RoundedLoadingButtonController btnController =
+      RoundedLoadingButtonController();
   final _formkey = GlobalKey<FormState>();
   final RegistrasiController controller = Get.put(RegistrasiController());
   final RxBool sembunyikan = false.obs;
@@ -162,30 +165,53 @@ class _RegistrasiViewState extends State<RegistrasiView> {
                       ),
                     ),
                     Center(
-                      child: FilledButton(
+                      child: RoundedLoadingButton(
+                        color: Color(0xffC0392B),
+                        controller: btnController,
                         onPressed: () {
-                          if (_formkey.currentState!.validate()) {
-                            _formkey.currentState!.save();
-                            controller.registrasi(
-                                controller.name.text,
-                                controller.email.text,
-                                controller.password.text);
-                          }
+                          Future.delayed(Duration(seconds: 3), () {
+                            if (_formkey.currentState!.validate()) {
+                              _formkey.currentState!.save();
+                              controller.registrasi(
+                                  controller.name.text,
+                                  controller.email.text,
+                                  controller.password.text);
+                            }
+                            btnController.reset();
+                          });
                         },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Color(0xffC0392B)),
-                          padding: MaterialStatePropertyAll(
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 60),
-                          ),
-                        ),
                         child: Text(
                           'Registrasi',
                           style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w700),
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
+                      // FilledButton(
+                      //   onPressed: () {
+                      //     if (_formkey.currentState!.validate()) {
+                      //       _formkey.currentState!.save();
+                      //       controller.registrasi(
+                      //           controller.name.text,
+                      //           controller.email.text,
+                      //           controller.password.text);
+                      //     }
+                      //   },
+                      //   style: ButtonStyle(
+                      //     backgroundColor:
+                      //         MaterialStatePropertyAll(Color(0xffC0392B)),
+                      //     padding: MaterialStatePropertyAll(
+                      //       EdgeInsets.symmetric(vertical: 10, horizontal: 60),
+                      //     ),
+                      //   ),
+                      //   child: Text(
+                      //     'Registrasi',
+                      //     style: TextStyle(
+                      //         fontFamily: 'Poppins',
+                      //         fontWeight: FontWeight.w700),
+                      //   ),
+                      // ),
                     ),
                     SizedBox(
                       height: MQH * 0.05,

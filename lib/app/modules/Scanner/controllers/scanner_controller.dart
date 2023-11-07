@@ -1,4 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ScannerController extends GetxController {
   //TODO: Implement ScannerController

@@ -34,6 +34,7 @@ class LoginController extends GetxController {
         prefs.setString('User_id', response.data['user']['id'].toString());
         prefs.setString('Nama', response.data['user']['name']);
         prefs.setString('Email', response.data['user']['email']);
+        prefs.setString('Gambar', response.data['user']['gambar']);
         prefs.setString('Token', response.data['token']);
         prefs.setBool('Login', true);
         UserId = prefs.getString('User_id')!;
@@ -42,6 +43,7 @@ class LoginController extends GetxController {
             'user_id': prefs.getString('User_id'),
             'nama': prefs.getString('Nama'),
             'email': prefs.getString('Email'),
+            'gambar': prefs.getString('Gambar'),
             'userlogin': prefs.getBool('Login'),
             'token': prefs.getString('Token'),
           }

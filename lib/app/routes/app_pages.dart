@@ -10,6 +10,8 @@ import '../modules/DetailBarang/bindings/detail_barang_binding.dart';
 import '../modules/DetailBarang/views/detail_barang_view.dart';
 import '../modules/EditBarang/bindings/edit_barang_binding.dart';
 import '../modules/EditBarang/views/edit_barang_view.dart';
+import '../modules/EditUser/bindings/edit_user_binding.dart';
+import '../modules/EditUser/views/edit_user_view.dart';
 import '../modules/Home/bindings/home_binding.dart';
 import '../modules/Home/views/home_view.dart';
 import '../modules/Login/bindings/login_binding.dart';
@@ -107,6 +109,11 @@ class AppPages {
       name: _Paths.ON_BOARDING,
       page: () => OnboardingView(),
       binding: OnBoardingBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_USER,
+      page: () => const EditUserView(),
+      binding: EditUserBinding(),
     ),
   ];
 }

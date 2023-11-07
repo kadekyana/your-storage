@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:your_storage/app/modules/EditUser/views/edit_user_view.dart';
 import 'package:your_storage/app/modules/Login/controllers/login_controller.dart';
 import 'package:your_storage/app/modules/splashScreen/controllers/splash_screen_controller.dart';
 
@@ -14,6 +16,8 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  final RoundedLoadingButtonController btnController =
+      RoundedLoadingButtonController();
   final LoginController login = Get.put(LoginController());
   final SplashScreenController splash = Get.put(SplashScreenController());
   @override
@@ -42,7 +46,8 @@ class _ProfileViewState extends State<ProfileView> {
                     height: 150,
                     width: 150,
                     child: CircleAvatar(
-                      backgroundImage: AssetImage('images/default.png'),
+                      backgroundImage: NetworkImage(
+                          'https://wiwindendriani.000webhostapp.com/${login.data.isNotEmpty ? login.data[0]['gambar'] : splash.data[0]['gambar']}'),
                     ),
                   ),
                   Text(
@@ -67,24 +72,62 @@ class _ProfileViewState extends State<ProfileView> {
             SizedBox(
               height: MQH * 0.3,
             ),
-            FilledButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.indigo[900]),
-                padding: MaterialStatePropertyAll(
-                  EdgeInsets.symmetric(vertical: 10, horizontal: 80),
+            RoundedLoadingButton(
+              color: Color(0xffC0392B),
+              controller: btnController,
+              onPressed: () {
+                Future.delayed(Duration(seconds: 2), () {
+                  btnController.reset();
+                  Get.to(EditUserView());
+                });
+              },
+              child: Text(
+                'Edit Profile',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
                 ),
               ),
+            ),
+            SizedBox(
+              height: MQH * 0.01,
+            ),
+            RoundedLoadingButton(
+              color: Color(0xffC0392B),
+              controller: btnController,
               onPressed: () {
-                login.logout();
+                Future.delayed(Duration(seconds: 2), () {
+                  btnController.reset();
+                  login.logout();
+                });
               },
               child: Text(
                 'LOGOUT',
                 style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20),
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
+
+            // FilledButton(
+            //   style: ButtonStyle(
+            //     backgroundColor: MaterialStatePropertyAll(Colors.indigo[900]),
+            //     padding: MaterialStatePropertyAll(
+            //       EdgeInsets.symmetric(vertical: 10, horizontal: 80),
+            //     ),
+            //   ),
+            //   onPressed: () {
+            //     login.logout();
+            //   },
+            //   child: Text(
+            //     'LOGOUT',
+            //     style: TextStyle(
+            //         fontFamily: 'Poppins',
+            //         fontWeight: FontWeight.w700,
+            //         fontSize: 20),
+            //   ),
+            // ),
           ],
         ),
       ),

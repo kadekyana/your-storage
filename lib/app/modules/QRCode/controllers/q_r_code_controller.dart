@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:your_storage/app/modules/QRCode/views/q_r_code_view.dart';
 
 class QRCodeController extends GetxController {
-  //TODO: Implement QRCodeController
-
   Dio dio = Dio();
   final String baseurl = 'https://wiwindendriani.000webhostapp.com/api/detail';
   dynamic barang;
