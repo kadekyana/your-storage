@@ -160,8 +160,16 @@ class _LoginViewState extends State<LoginView> {
                             _formkey.currentState!.save();
                             controller.login(controller.email.text,
                                 controller.password.text);
-                            Future.delayed(Duration(seconds: 2), () {
-                              btnController.reset();
+                            Future.delayed(Duration(seconds: 3), () {
+                              if (controller.data.isNotEmpty) {
+                                Future.delayed(Duration(seconds: 1), () {
+                                  btnController.success();
+                                });
+                              } else {
+                                Future.delayed(Duration(seconds: 1), () {
+                                  btnController.reset();
+                                });
+                              }
                             });
                           }
                         },

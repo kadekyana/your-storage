@@ -56,7 +56,7 @@ class EditBarangController extends GetxController {
           print(response.data);
           Future.delayed(Duration(seconds: 4), () {
             Get.to(BottomBarView());
-            Get.snackbar("Sukses", "Tambah Barang",
+            Get.snackbar("Sukses", "Update Barang",
                 backgroundColor: Colors.indigo[900],
                 borderColor: Colors.black,
                 borderWidth: 1,

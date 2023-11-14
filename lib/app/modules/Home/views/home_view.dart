@@ -26,7 +26,8 @@ class _HomeViewState extends State<HomeView> {
   final HomeController home = Get.put(HomeController());
   final LoginController login = Get.put(LoginController());
   final SplashScreenController splash = Get.put(SplashScreenController());
-
+  final TextEditingController keyword = TextEditingController();
+  bool isLoaded = false;
   @override
   void initState() {
     super.initState();
@@ -55,7 +56,27 @@ class _HomeViewState extends State<HomeView> {
     if (response.statusCode == 200) {
       setState(() {});
       dataBarang = response.data['data'];
+      isLoaded = true;
       print(dataBarang);
+    }
+  }
+
+  final search = 'https://wiwindendriani.000webhostapp.com/api/search';
+
+  dynamic searchbarang = [];
+
+  Future<void> searchBarang(String keyword) async {
+    final userid = login.data.isNotEmpty
+        ? login.data[0]['user_id']
+        : splash.data[0]['user_id'];
+    final response = await dio.get('${search}/${userid}/${keyword}');
+    if (response.statusCode == 200) {
+      print(response.data);
+      setState(() {
+        searchbarang = response.data;
+      });
+      print('var ${searchbarang}');
+      // return response.data;
     }
   }
 
@@ -120,7 +141,7 @@ class _HomeViewState extends State<HomeView> {
               height: MQH,
             ),
             const Positioned(
-                top: 80,
+                top: 30,
                 left: 10,
                 child: Text(
                   'YOUR',
@@ -130,7 +151,7 @@ class _HomeViewState extends State<HomeView> {
                       fontWeight: FontWeight.w700),
                 )),
             const Positioned(
-              top: 115,
+              top: 55,
               left: 10,
               child: Text(
                 'STORAGE',
@@ -140,6 +161,26 @@ class _HomeViewState extends State<HomeView> {
                     fontWeight: FontWeight.w700),
               ),
             ),
+            // Positioned(
+            //   top: 95,
+            //   left: 10,
+            //   child: Container(
+            //     width: MQW * 0.75,
+            //     child: TextFormField(
+            //       keyboardType: TextInputType.text,
+            //       controller: keyword,
+            //       onEditingComplete: () {
+            //         searchBarang(keyword.text);
+            //       },
+            //       decoration: InputDecoration(
+            //           contentPadding: EdgeInsets.symmetric(horizontal: 20),
+            //           label: Text('Cari Barang'),
+            //           border: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(50)),
+            //           suffixIcon: Icon(Icons.search)),
+            //     ),
+            //   ),
+            // ),
             Positioned(
               top: 90,
               left: 290,
@@ -163,85 +204,93 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Positioned(
-              top: 160,
-              child: Container(
-                width: MQW,
-                height: MQH * 0.7,
-                child: dataBarang.isEmpty
-                    ? Shimmer.fromColors(
-                        baseColor: Colors.grey,
-                        highlightColor: Color(0xffC0392B),
-                        child: ListView.builder(
-                          itemCount: 8,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(
-                                'Tunggu Sebentar',
+                top: 160,
+                child: Container(
+                  width: MQW,
+                  height: MQH * 0.7,
+                  child: isLoaded
+                      ? (dataBarang.isEmpty
+                          ? Center(
+                              child: Text(
+                                'Barang Belum Terisi, Tambah Dahulu',
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w700),
                               ),
-                              leading: Icon(
-                                Icons.image_rounded,
-                                size: 30,
-                              ),
-                              subtitle: Text('Sedang Load Barang',
-                                  style: TextStyle(fontFamily: 'Poppins')),
-                            );
-                          },
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: dataBarang.length,
-                        itemBuilder: (context, index) {
-                          final barang = dataBarang[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Get.to(QRCodeView(
-                                detail: barang['id'].toString(),
-                              ));
-                            },
-                            child: Slidable(
-                              endActionPane: ActionPane(
-                                  motion: const DrawerMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      backgroundColor: Colors.blue,
-                                      icon: Icons.edit,
-                                      label: 'Edit Barang',
-                                      onPressed: (context) {
-                                        detail(barang['id']);
-                                      },
-                                    ),
-                                    SlidableAction(
-                                      backgroundColor: Colors.red,
-                                      icon: Icons.delete,
-                                      label: 'Hapus Barang',
-                                      onPressed: (context) {
-                                        hapus(barang['id']);
-                                      },
-                                    ),
-                                  ]),
-                              child: Card(
-                                child: ListTile(
-                                  title: Text(barang['nama']),
-                                  leading: barang['gambar'] != null
-                                      ? CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                            'https://wiwindendriani.000webhostapp.com/${barang['gambar']}',
+                            )
+                          : ListView.builder(
+                              itemCount: dataBarang.length,
+                              itemBuilder: (context, index) {
+                                final barang = dataBarang[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(QRCodeView(
+                                      detail: barang['id'].toString(),
+                                    ));
+                                  },
+                                  child: Slidable(
+                                    endActionPane: ActionPane(
+                                        motion: const DrawerMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            backgroundColor: Colors.blue,
+                                            icon: Icons.edit,
+                                            label: 'Edit Barang',
+                                            onPressed: (context) {
+                                              detail(barang['id']);
+                                            },
                                           ),
-                                        )
-                                      : Icon(Icons.image),
-                                  subtitle: Text(barang['tanggal'],
-                                      overflow: TextOverflow.ellipsis),
+                                          SlidableAction(
+                                            backgroundColor: Colors.red,
+                                            icon: Icons.delete,
+                                            label: 'Hapus Barang',
+                                            onPressed: (context) {
+                                              hapus(barang['id']);
+                                            },
+                                          ),
+                                        ]),
+                                    child: Card(
+                                      child: ListTile(
+                                        title: Text(barang['nama']),
+                                        leading: barang['gambar'] != null
+                                            ? CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                  'https://wiwindendriani.000webhostapp.com/${barang['gambar']}',
+                                                ),
+                                              )
+                                            : Icon(Icons.image),
+                                        subtitle: Text(barang['tanggal'],
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ))
+                      : Shimmer.fromColors(
+                          baseColor: Colors.grey,
+                          highlightColor: Color(0xffC0392B),
+                          child: ListView.builder(
+                            itemCount: 8,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(
+                                  'Tunggu Sebentar',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w700),
                                 ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ),
+                                leading: Icon(
+                                  Icons.image_rounded,
+                                  size: 30,
+                                ),
+                                subtitle: Text('Sedang Load Barang',
+                                    style: TextStyle(fontFamily: 'Poppins')),
+                              );
+                            },
+                          ),
+                        ),
+                )),
           ],
         ),
       ),

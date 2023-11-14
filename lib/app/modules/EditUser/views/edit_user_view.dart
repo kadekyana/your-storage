@@ -72,7 +72,7 @@ class _EditUserViewState extends State<EditUserView> {
               ),
             ),
             Positioned(
-                top: 170,
+                top: 100,
                 left: 10,
                 child: Text(
                   'EDIT',
@@ -83,10 +83,10 @@ class _EditUserViewState extends State<EditUserView> {
                       fontWeight: FontWeight.w700),
                 )),
             Positioned(
-              top: 200,
+              top: 130,
               left: 10,
               child: Text(
-                'User',
+                'PROFILE',
                 style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Poppins',

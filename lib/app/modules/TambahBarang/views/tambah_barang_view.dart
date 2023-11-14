@@ -71,7 +71,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
               ),
             ),
             Positioned(
-                top: 170,
+                top: 80,
                 left: 10,
                 child: Text(
                   'TAMBAH',
@@ -82,7 +82,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
                       fontWeight: FontWeight.w700),
                 )),
             Positioned(
-              top: 200,
+              top: 110,
               left: 10,
               child: Text(
                 'BARANG',
@@ -97,7 +97,7 @@ class _TambahBarangViewState extends State<TambahBarangView> {
               bottom: 0,
               child: Container(
                 width: MQW,
-                height: MQH * 0.65,
+                height: MQH * 0.75,
                 child: Card(
                   elevation: 10,
                   child: Form(

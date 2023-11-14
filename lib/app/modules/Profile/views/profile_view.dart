@@ -31,7 +31,7 @@ class _ProfileViewState extends State<ProfileView> {
           children: [
             Container(
               width: MQW,
-              height: MQH * 0.3,
+              height: MQH * 0.5,
               decoration: const BoxDecoration(
                 color: Color(0xffC0392B),
                 borderRadius: BorderRadius.only(
@@ -70,23 +70,24 @@ class _ProfileViewState extends State<ProfileView> {
               ),
             ),
             SizedBox(
-              height: MQH * 0.3,
+              height: MQH * 0.1,
             ),
-            RoundedLoadingButton(
-              color: Color(0xffC0392B),
-              controller: btnController,
+            FilledButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.indigo[900]),
+                padding: MaterialStatePropertyAll(
+                  EdgeInsets.symmetric(vertical: 15, horizontal: 110),
+                ),
+              ),
               onPressed: () {
-                Future.delayed(Duration(seconds: 2), () {
-                  btnController.reset();
-                  Get.to(EditUserView());
-                });
+                Get.to(EditUserView());
               },
               child: Text(
                 'Edit Profile',
                 style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
-                ),
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15),
               ),
             ),
             SizedBox(
@@ -109,25 +110,6 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
               ),
             ),
-
-            // FilledButton(
-            //   style: ButtonStyle(
-            //     backgroundColor: MaterialStatePropertyAll(Colors.indigo[900]),
-            //     padding: MaterialStatePropertyAll(
-            //       EdgeInsets.symmetric(vertical: 10, horizontal: 80),
-            //     ),
-            //   ),
-            //   onPressed: () {
-            //     login.logout();
-            //   },
-            //   child: Text(
-            //     'LOGOUT',
-            //     style: TextStyle(
-            //         fontFamily: 'Poppins',
-            //         fontWeight: FontWeight.w700,
-            //         fontSize: 20),
-            //   ),
-            // ),
           ],
         ),
       ),

@@ -51,14 +51,16 @@ class LoginController extends GetxController {
         update();
         print("data login di simpn di $data");
         print(UserId);
-        Get.to(BottomBarView());
-        Get.snackbar("Success Login", "Selamat Mencoba",
-            backgroundColor: Colors.indigo[900],
-            borderColor: Colors.black,
-            borderWidth: 1,
-            colorText: Colors.white);
+        Future.delayed(Duration(seconds: 3), () {
+          Get.to(BottomBarView());
+          Get.snackbar("Success Login", "Selamat Mencoba",
+              backgroundColor: Colors.indigo[900],
+              borderColor: Colors.black,
+              borderWidth: 1,
+              colorText: Colors.white);
+        });
       } else {
-        Get.snackbar("Error", "Username atau Password Salah");
+        Get.snackbar("Error", "Koneksi Bermasalah");
       }
     } catch (e) {
       Get.snackbar('Erorr', 'Email And Password Salah, Coba Lagi !',

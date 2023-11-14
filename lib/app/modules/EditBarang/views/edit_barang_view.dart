@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:your_storage/app/modules/BottomBar/views/bottom_bar_view.dart';
 import 'package:your_storage/app/modules/EditBarang/controllers/edit_barang_controller.dart';
 import 'package:your_storage/app/widget/custom_date.dart';
@@ -16,6 +17,8 @@ class EditBarangView extends StatefulWidget {
 }
 
 class _EditBarangViewState extends State<EditBarangView> {
+  final RoundedLoadingButtonController btnController =
+      RoundedLoadingButtonController();
   final ImagePicker picker = ImagePicker();
   File? image;
   final _formkey = GlobalKey<FormState>();
@@ -74,7 +77,7 @@ class _EditBarangViewState extends State<EditBarangView> {
               ),
             ),
             Positioned(
-                top: 170,
+                top: 80,
                 left: 10,
                 child: Text(
                   'EDIT',
@@ -85,7 +88,7 @@ class _EditBarangViewState extends State<EditBarangView> {
                       fontWeight: FontWeight.w700),
                 )),
             Positioned(
-              top: 200,
+              top: 110,
               left: 10,
               child: Text(
                 'BARANG',
@@ -100,7 +103,7 @@ class _EditBarangViewState extends State<EditBarangView> {
               bottom: 0,
               child: Container(
                 width: MQW,
-                height: MQH * 0.65,
+                height: MQH * 0.75,
                 child: Card(
                   elevation: 10,
                   child: Form(
@@ -230,36 +233,63 @@ class _EditBarangViewState extends State<EditBarangView> {
                             ),
                           ),
                           Center(
-                            child: FilledButton(
+                            child: RoundedLoadingButton(
+                              color: Color(0xffC0392B),
+                              controller: btnController,
                               onPressed: () {
-                                if (_formkey.currentState!.validate()) {
-                                  _formkey.currentState!.save();
-                                  Get.to(BottomBarView());
-                                  controller.updateBarang(
-                                      namaC.text,
-                                      warnaC.text,
-                                      jumlahC.text,
-                                      hargaC.text,
-                                      tanggalC.text,
-                                      id,
-                                      controller.picselect!);
-                                }
+                                Future.delayed(Duration(seconds: 1), () {
+                                  btnController.success();
+                                  Future.delayed(Duration(seconds: 1), () {
+                                    controller.updateBarang(
+                                        namaC.text,
+                                        warnaC.text,
+                                        jumlahC.text,
+                                        hargaC.text,
+                                        tanggalC.text,
+                                        id,
+                                        controller.picselect!);
+                                    Get.to(BottomBarView());
+                                  });
+                                });
                               },
-                              style: const ButtonStyle(
-                                backgroundColor:
-                                    MaterialStatePropertyAll(Color(0xffC0392B)),
-                                padding: MaterialStatePropertyAll(
-                                  EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 80),
+                              child: Text(
+                                'Update Barang',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              child: Text(
-                                'Edit',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w700),
-                              ),
                             ),
+                            // FilledButton(
+                            //   onPressed: () {
+                            //     if (_formkey.currentState!.validate()) {
+                            //       _formkey.currentState!.save();
+                            //       Get.to(BottomBarView());
+                            //       controller.updateBarang(
+                            //           namaC.text,
+                            //           warnaC.text,
+                            //           jumlahC.text,
+                            //           hargaC.text,
+                            //           tanggalC.text,
+                            //           id,
+                            //           controller.picselect!);
+                            //     }
+                            //   },
+                            //   style: const ButtonStyle(
+                            //     backgroundColor:
+                            //         MaterialStatePropertyAll(Color(0xffC0392B)),
+                            //     padding: MaterialStatePropertyAll(
+                            //       EdgeInsets.symmetric(
+                            //           vertical: 10, horizontal: 80),
+                            //     ),
+                            //   ),
+                            //   child: Text(
+                            //     'Edit',
+                            //     style: TextStyle(
+                            //         fontFamily: 'Poppins',
+                            //         fontWeight: FontWeight.w700),
+                            //   ),
+                            // ),
                           ),
                         ],
                       ),
